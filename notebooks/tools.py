@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
 
 
@@ -82,7 +83,6 @@ def calculate_metrics(model, X, y):
 def evaluate_model(model, X, y, dataset='test'):
     CM, accuracy, precision, recall, f1 = calculate_metrics(model, X, y)
 
-    from matplotlib.colors import LinearSegmentedColormap
     colors = ['#e7eeff', '#8882d9', '#264f73']
     custom_cmap = LinearSegmentedColormap.from_list("custom_bupu", colors)
 
