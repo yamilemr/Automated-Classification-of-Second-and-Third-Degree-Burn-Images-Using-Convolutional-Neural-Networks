@@ -1,3 +1,4 @@
 notebooks/__pycache__/
 notebooks/wandb/
-data/
+data/burn_images/
+data/test_images/
