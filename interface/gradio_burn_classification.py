@@ -7,7 +7,7 @@ width = 540
 height = 960
 
 # Cargar modelo
-cnn = models.load_model('modelos/ourModel_green.keras')
+cnn = models.load_model('models/proposed_model/burn_green_cnn.keras')
 
 def predecir_grado(img):
     # img llega como RGB (numpy) desde Gradio
