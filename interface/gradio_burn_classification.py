@@ -3,50 +3,68 @@ import numpy as np
 import gradio as gr
 from keras import models
 
-width = 540
-height = 960
+#Required input dimensions for the proposed CNN architecture
+WIDTH = 540
+HEIGHT = 960
 
-# Cargar modelo
+#Load the model
 cnn = models.load_model('models/proposed_model/burn_green_cnn.keras')
 
-def predecir_grado(img):
-    # img llega como RGB (numpy) desde Gradio
+def predict_burn_degree(img):
+    '''
+    Function that receives an image from the Gradio interface, preprocesses it 
+    using the same pipeline applied during model training, and returns the
+    predicted burn degree along with its associated probability.
+
+    Parameters:
+    - img (numpy.ndarray): Input image in RGB format.
+
+    Returns:
+    - degree (int): Predicted burn degree (2 or 3).
+    - probability (float): Associated probability rounded to 4 decimals.
+    '''
+    #The image is received as a numpy array in RGB format; validate it is not null
     if img is None:
-        return None, {"error": "Imagen no válida"}
+        return None, {'error': 'Invalid image'}
     
-    # Asegurar 3 canales RGB
+    #Ensure the image has 3 channels (RGB)
     if img.ndim == 2:
+        #If the image is grayscale, convert it to RGB
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     if img.shape[2] == 4:
+        #If the image has an alpha channel (RGBA), convert it to RGB
         img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
 
-    # Procesamiento
-    resized = cv2.resize(img, (width, height)) # Redimensionar la imagen
-    green = resized[:, :, 1] # Extraer sólo el canal verde de la imagen
-    X = np.expand_dims(green, axis=(0, -1)) # (1, H, W, 1)
+    #Preprocessing 
+    resized = cv2.resize(img, (WIDTH, HEIGHT)) #Resize the image
+    green = resized[:, :, 1] #Extract only the green channel
+    X = np.expand_dims(green, axis=(0, -1)) #Reshape the array to be compatible with Keras: (1, H, W, 1)
 
-    # Predicción
+    #Prediction 
     pred = cnn.predict(X)
-    prob = pred[0][0] # Probabilidad de pertenecer a la clase 1 (tercer grado)
+    prob = pred[0][0] #Probability of belonging to class 1 (third degree burn)
+    
+    #If probability > 0.5, it's a third degree burn. If probability <= 0.5, it's a second-degree burn
     if prob > 0.5:
-        grado = 3
-        probabilidad = float(prob)
+        degree = 3
+        probability  = float(prob)
     else:
-        grado = 2
-        probabilidad = float(1 - prob)
+        degree = 2
+        probability  = float(1 - prob)
 
-    return grado, round(probabilidad, 4)
+    return degree, round(probability , 4)
 
+#Gradio interface definition
 iface = gr.Interface(
-    fn=predecir_grado,
-    inputs=gr.Image(type="numpy", label="Sube una imagen"),
+    fn=predict_burn_degree,
+    inputs=gr.Image(type='numpy', label='Upload an image'),
     outputs=[
-        gr.Number(label="Grado de la quemadura"),
-        gr.Number(label="Probabilidad")
-    ],
-    title="Clasificación de Quemaduras de 2° y 3° Grado",
-    description="Sube una imagen de una quemadura y el modelo predecirá el grado. Trata que la imagen sea clara y que la quemadura cubra toda la imagen.",
-    allow_flagging="never"
+        gr.Number(label='Burn degree'),
+        gr.Number(label='Probability')],
+    title='Automated Classification of Second and Third Degree Burn Images',
+    description='Upload an image of a burn and the model will predict its degree. Try to use a clear image where the burn covers the entire frame.',
+    allow_flagging='never'
 )
 
-iface.launch(share = False) # True para compartir en línea, False se queda en local
+#Launch the application
+iface.launch(share=False) #False runs locally only; True generates a temporary public link
