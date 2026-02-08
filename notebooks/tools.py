@@ -9,29 +9,49 @@ from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, r
 
 
 def load_images_with_labels(path=None, channels=None):
+    '''
+    Function that loads images from a directory structured by classes (second_degree and third_degree),
+    resizes them, selects the desired color channels, and generates their corresponding labels.
+
+    Parameters:
+    - path (str): Path to the root directory that contains the folders with images for each class.
+    - channels (str or list): Defines which color channels to use. It can be 'bgr' to use the full image
+                              or a combination of ['blue', 'green', 'red'].
+
+    Returns:
+    - X (np.ndarray): Array of processed images.
+    - y (np.ndarray): Array of labels associated with each image.
+    '''
+    #Dimensions to resize the images
     width = 540
     height = 960
     
+    #If no channels are specified, use the three BGR channels
     if channels == None:
         channels = 'bgr'
 
+    #Input path validation
     if path is None:
         raise ValueError("The 'path' parameter cannot be None")
-    folder_path  = path
-        
+
+    #Lists to store images and labels
     X = []
     y = []
 
-    for i in os.listdir(folder_path ):
-        for j in os.listdir(folder_path  + i):
-            img = cv2.imread(folder_path  + i + '/' + j)
-            resized_img = cv2.resize(img, (width, height))
+    #Iterate over each folder (class) inside the root directory
+    for folder in os.listdir(path):
+        #Iterate over each image inside the class folder
+        for image in os.listdir(path + folder):
+            img = cv2.imread(path + folder + '/' + image) #Read the image
+            resized_img = cv2.resize(img, (width, height)) #Resize the image
             
+            #If all BGR channels are used, add the full image
             if channels == 'bgr':
                 X.append(resized_img)
             
+            #Extract the selected channels from the image
             else:
-                selected_channels = []
+                selected_channels = [] #List to store selected channels
 
                 if 'blue' in channels:
                     blue = resized_img[:, :, 0]
@@ -45,17 +65,21 @@ def load_images_with_labels(path=None, channels=None):
                     red = resized_img[:, :, 2]
                     selected_channels.append(red)
                 
+                #If there is only one channel, add it directly
                 if len(selected_channels) == 1:
                     X.append(selected_channels[0])
+                
+                #If there is more than one channel, stack them into a single array
                 else:
                     X.append(np.dstack(selected_channels))
 
             #0: second degree (negative class), 1: third degree (positive class)
-            if i == 'second_degree':
+            if folder == 'second_degree':
                 y.append(0) 
             else:
                 y.append(1)
 
+    #Convert lists to NumPy arrays
     X = np.array(X)
     y = np.array(y)
 
@@ -67,10 +91,27 @@ def load_images_with_labels(path=None, channels=None):
 
 
 def calculate_metrics(model, X, y):
-    predictions = model.predict(X)
-    y_true = y.flatten()
-    y_pred = (predictions > 0.5).astype(int).flatten() #Probability greater than 0.5 corresponds to third grade (class 1)
+    '''
+    Function that computes performance metrics for a binary classification model.
+
+    Parameters:
+    - model (keras.Model): Trained keras model with a 'predict' method.
+    - X (np.ndarray): Input dataset.
+    - y (np.ndarray): Labels associated with the input data.
+
+    Returns:
+    - CM (np.ndarray): Confusion matrix.
+    - accuracy (float): Model accuracy.
+    - precision (float): Model precision.
+    - recall (float): Model recall.
+    - f1 (float): Model F1-score.
+    '''
+    predictions = model.predict(X) #Model predictions
+
+    y_true = y.flatten() #Flatten labels to ensure compatibility.
+    y_pred = (predictions > 0.5).astype(int).flatten() #Convert probabilities to binary classes. Probability > 0.5 corresponds to third degree (class 1)
     
+    #Compute confusion matrix and evaluation metrics
     CM = confusion_matrix(y_true, y_pred)
     accuracy = accuracy_score(y_true, y_pred)
     precision = precision_score(y_true, y_pred)
@@ -81,6 +122,19 @@ def calculate_metrics(model, X, y):
 
 
 def evaluate_model(model, X, y, dataset='test'):
+    '''
+    Function that evaluates the performance of a binary classification model, visualizes the confusion matrix using a 
+    heatmap, and includes the performance metrics in the figure.
+
+    Parameters:
+    - model (keras.Model): Trained keras model with a 'predict' method.
+    - X (np.ndarray): Input dataset.
+    - y (np.ndarray): Labels associated with the input data.
+    - dataset (str): Name of the evaluated dataset (e.g., 'train', 'validation', or 'test').
+
+    Returns:
+    - None. The function generates a confusion matrix plot and includes the evaluation metrics.
+'''
     CM, accuracy, precision, recall, f1 = calculate_metrics(model, X, y)
 
     colors = ['#e7eeff', '#8882d9', '#264f73']
@@ -98,8 +152,23 @@ def evaluate_model(model, X, y, dataset='test'):
                 ha='center', fontsize=11, va='top')
     
 
-def save_metrics_to_csv(model, X, y, model_name='OurModel', dataset='test', csv_path='metricas.csv'):
-    _, accuracy, precision, recall, f1 = calculate_metrics(model, X, y)
+def save_metrics_to_csv(model, X, y, model_name='OurModel', dataset='test', csv_path='metrics.csv'):
+    '''
+    Function that evaluates the performance of a binary classification model and saves its metrics to a CSV file.
+    The metrics are stored according to the evaluated dataset (train, validation, or test) and are organized by model.
+
+    Parameters:
+    - model (keras.Model): Trained keras model with a 'predict' method.
+    - X (np.ndarray): Input dataset.
+    - y (np.ndarray): Labels associated with the input data.
+    - model_name (str): Name of the model to be registered in the CSV.
+    - dataset (str): Evaluated dataset ('train', 'val', or 'test').
+    - csv_path (str): Path to the CSV where the metrics are stored.
+
+    Returns:
+    - None. The function saves or updates the model metrics in a CSV file.
+    '''
+    _, accuracy, precision, recall, f1 = calculate_metrics(model, X, y) #Compute the model evaluation metrics
 
     #Create CSV if it does not exist
     if not os.path.exists(csv_path):
@@ -109,21 +178,23 @@ def save_metrics_to_csv(model, X, y, model_name='OurModel', dataset='test', csv_
                                    'Accuracy Test', 'Precision Test', 'Recall Test', 'F1 Test'])
         df.to_csv(csv_path, index=False)
 
-    df = pd.read_csv(csv_path)
+    df = pd.read_csv(csv_path) #Load the CSV file
 
     #Create model row if it does not exist
     if model_name not in df['Model'].values:
         df = pd.concat([df, pd.DataFrame({'Model': [model_name]})], ignore_index=True)
 
-    columnas = {'train': ('Accuracy Train', 'Precision Train', 'Recall Train', 'F1 Train'),
+    #Dictionary that maps each dataset to its corresponding columns
+    columns = {'train': ('Accuracy Train', 'Precision Train', 'Recall Train', 'F1 Train'),
                 'val':   ('Accuracy Validation', 'Precision Validation', 'Recall Validation', 'F1 Validation'),
                 'test':  ('Accuracy Test', 'Precision Test', 'Recall Test', 'F1 Test')}
 
-    df_accuracy, df_precision, df_recall, df_f1 = columnas[dataset]
+    df_accuracy, df_precision, df_recall, df_f1 = columns[dataset] #Select the columns according to the evaluated dataset
 
+    #Update the model metrics in the CSV
     df.loc[df['Model'] == model_name, df_accuracy] = accuracy
     df.loc[df['Model'] == model_name, df_precision] = precision
     df.loc[df['Model'] == model_name, df_recall] = recall
     df.loc[df['Model'] == model_name, df_f1] = f1
 
-    df.to_csv(csv_path, index=False)
+    df.to_csv(csv_path, index=False) #Save changes to the CSV
