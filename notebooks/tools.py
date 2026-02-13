@@ -79,7 +79,7 @@ def load_images_with_labels(path=None, channels=None):
             else:
                 y.append(1)
 
-    #Convert lists to NumPy arrays
+    #Convert lists to numpy arrays
     X = np.array(X)
     y = np.array(y)
 
@@ -108,7 +108,7 @@ def calculate_metrics(model, X, y):
     '''
     predictions = model.predict(X) #Model predictions
 
-    y_true = y.flatten() #Flatten labels to ensure compatibility.
+    y_true = y.flatten() #Flatten labels to ensure compatibility
     y_pred = (predictions > 0.5).astype(int).flatten() #Convert probabilities to binary classes. Probability > 0.5 corresponds to third degree (class 1)
     
     #Compute confusion matrix and evaluation metrics
@@ -134,20 +134,27 @@ def evaluate_model(model, X, y, dataset='test'):
 
     Returns:
     - None. The function generates a confusion matrix plot and includes the evaluation metrics.
-'''
-    CM, accuracy, precision, recall, f1 = calculate_metrics(model, X, y)
+    '''
+    CM, accuracy, precision, recall, f1 = calculate_metrics(model, X, y) #Compute confusion matrix and evaluation metrics
 
+    #Define a custom color gradient for heatmap visualization
     colors = ['#e7eeff', '#8882d9', '#264f73']
     custom_cmap = LinearSegmentedColormap.from_list("custom_bupu", colors)
 
-    plt.figure(figsize=(4, 4))
+    plt.figure(figsize=(4, 4)) #Initialize figure
+
+    #Plot confusion matrix as heatmap
     sns.heatmap(CM, annot=True, fmt='d', cmap=custom_cmap,
                 xticklabels=['2nd degree', '3rd degree'],
                 yticklabels=['2nd degree', '3rd degree'],
                 annot_kws={'size': 13})
+    
+    #Set title and axis labels
     plt.title(dataset, fontsize=14)
     plt.xlabel('Predicted', fontsize=12)
     plt.ylabel('Actual', fontsize=12)
+
+    #Display metrics below the plot
     plt.figtext(0.45, 0, f'\nAccuracy: {accuracy:.4f} | Precision: {precision:.4f}\nRecall: {recall:.4f} | F1-Score: {f1:.4f}',
                 ha='center', fontsize=11, va='top')
     
