@@ -1,11 +1,11 @@
 
-# Automated Classification of Second- and Third-Degree Burn Images
+# Automated Classification of Second and Third Degree Burn Images
 
-This repository contains code, trained models, experiment artifacts and notebooks used to develop and evaluate convolutional neural networks for classifying second- and third-degree burn images.
+This repository contains code, trained models, experiment artifacts and notebooks used to develop and evaluate convolutional neural networks for classifying second and third degree burn images.
 
 
 ## Setup
-1. Create a Python environment (recommended: venv or conda).
+1. Create a Python `3.11.9` environment (recommended: venv or conda).
 2. Install dependencies:
 
 ```bash
@@ -32,13 +32,14 @@ Notes:
   - (Note) Raw datasets (images) are not included in this repository — provide training/validation/test folders with names such as `second_degree/` and `third_degree/` when running the notebooks or training scripts.
 - `figures/` — generated plots and figures used in the manuscript and analysis.
 - `interface/` — minimal Gradio-based inference UI: `gradio_burn_classification.py`.
-- `models/` — saved model checkpoints in Keras format. Examples in this repository include `mobileNetV2_rgb.keras`, `resNet50_rgb.keras`, `vgg16_rgb.keras`, and `ourModel_green.keras`. There may be subfolders (e.g., `proposed_model/`) which contain the model used by the Gradio demo.
+- `models/` — saved model checkpoints in Keras format. Examples in this repository include `mobilenetv2.keras`, `resnet50.keras`, `vgg16.keras`, and `burn_green_cnn.keras`. There may be subfolders (e.g., `proposed_model/`) which contain the model used by the Gradio demo.
 - `notebooks/` — Jupyter notebooks for exploration, evaluation and figure generation. Notable files:
-  - `best_model_green_channel.ipynb` — analysis targeting models that use only the green channel.
-  - `transfer_learning.ipynb` — transfer-learning experiments and setup notes.
-  - `model_evaluation.ipynb` — aggregated model evaluation and metric calculations.
-  - `hyperparameter_search_ wandb.ipynb` — hyperparameter search analysis and W&B integration.
+  - `best_model_green_channel.ipynb` — proposed architecture in the manuscript that uses only the green channel.
+  - `transfer_learning_training.ipynb` — transfer-learning experiments and setup notes.
+  - `model_test_evaluation.ipynb` — aggregated model evaluation and metric calculations.
+  - `hyperparameter_search_wandb.ipynb` — hyperparameter search analysis and W&B integration.
   - `wandb_csv_preprocessing.ipynb` — scripts to preprocess W&B CSV exports.
+  - `figure_plots.ipynb` — generation of the figures included in the manuscript.
   - `tools.py` — helper utilities used across notebooks (image loading, resizing, evaluation helpers).
 
 ## Model details and inference
