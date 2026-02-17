@@ -8,7 +8,7 @@ from matplotlib.colors import LinearSegmentedColormap
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
 
 
-def load_images_with_labels(path=None, channels=None):
+def load_images_with_labels(path=None, channels=None, width=540, height=960):
     '''
     Function that loads images from a directory structured by classes (second_degree and third_degree),
     resizes them, selects the desired color channels, and generates their corresponding labels.
@@ -17,15 +17,13 @@ def load_images_with_labels(path=None, channels=None):
     - path (str): Path to the root directory that contains the folders with images for each class.
     - channels (str or list): Defines which color channels to use. It can be 'bgr' to use the full image
                               or a combination of ['blue', 'green', 'red'].
+    - width (int): Target width to resize images.
+    - height (int): Target height to resize images.
 
     Returns:
     - X (np.ndarray): Array of processed images.
     - y (np.ndarray): Array of labels associated with each image.
     '''
-    #Dimensions to resize the images
-    width = 540
-    height = 960
-    
     #If no channels are specified, use the three BGR channels
     if channels == None:
         channels = 'bgr'
