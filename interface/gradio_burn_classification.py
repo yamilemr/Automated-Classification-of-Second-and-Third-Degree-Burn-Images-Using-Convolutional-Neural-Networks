@@ -42,9 +42,9 @@ def predict_burn_degree(img):
 
     #Prediction 
     pred = cnn.predict(X)
-    prob = pred[0][0] #Probability of belonging to class 1 (third degree burn)
+    prob = pred[0][0] #Probability of belonging to class 1 (third-degree burn)
     
-    #If probability > 0.5, it's a third degree burn. If probability <= 0.5, it's a second-degree burn
+    #If probability > 0.5, it's a third-degree burn. If probability <= 0.5, it's a second-degree burn
     if prob > 0.5:
         degree = 3
         probability  = float(prob)
@@ -61,7 +61,7 @@ iface = gr.Interface(
     outputs=[
         gr.Number(label='Burn degree'),
         gr.Number(label='Probability')],
-    title='Automated Classification of Second and Third Degree Burn Images',
+    title='Automated Classification of Second- and Third-Degree Burn Images',
     description='Upload an image of a burn and the model will predict its degree. Try to use a clear image where the burn covers the entire frame.',
     allow_flagging='never'
 )

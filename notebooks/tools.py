@@ -71,7 +71,7 @@ def load_images_with_labels(path=None, channels=None, width=540, height=960):
                 else:
                     X.append(np.dstack(selected_channels))
 
-            #0: second degree (negative class), 1: third degree (positive class)
+            #0: second-degree (negative class), 1: third-degree (positive class)
             if folder == 'second_degree':
                 y.append(0) 
             else:
@@ -107,7 +107,7 @@ def calculate_metrics(model, X, y):
     predictions = model.predict(X) #Model predictions
 
     y_true = y.flatten() #Flatten labels to ensure compatibility
-    y_pred = (predictions > 0.5).astype(int).flatten() #Convert probabilities to binary classes. Probability > 0.5 corresponds to third degree (class 1)
+    y_pred = (predictions > 0.5).astype(int).flatten() #Convert probabilities to binary classes. Probability > 0.5 corresponds to third-degree (class 1)
     
     #Compute confusion matrix and evaluation metrics
     CM = confusion_matrix(y_true, y_pred)
@@ -143,8 +143,8 @@ def evaluate_model(model, X, y, dataset='test'):
 
     #Plot confusion matrix as heatmap
     sns.heatmap(CM, annot=True, fmt='d', cmap=custom_cmap,
-                xticklabels=['2nd degree', '3rd degree'],
-                yticklabels=['2nd degree', '3rd degree'],
+                xticklabels=['2nd-Degree', '3rd-Degree'],
+                yticklabels=['2nd-Degree', '3rd-Degree'],
                 annot_kws={'size': 13})
     
     #Set title and axis labels

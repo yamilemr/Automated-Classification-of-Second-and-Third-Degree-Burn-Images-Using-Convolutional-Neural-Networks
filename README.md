@@ -1,7 +1,7 @@
 
-# Automated Classification of Second and Third Degree Burn Images
+# Automated Classification of Second- and Third-Degree Burn Images
 
-This repository contains code, trained models, experiment artifacts and notebooks used to develop and evaluate convolutional neural networks for classifying second and third degree burn images.
+This repository contains code, trained models, experiment artifacts and notebooks used to develop and evaluate convolutional neural networks for classifying second- and third-degree burn images.
 
 
 ## Setup
