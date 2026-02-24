@@ -178,9 +178,9 @@ def save_metrics_to_csv(model, X, y, model_name='OurModel', dataset='test', csv_
     #Create CSV if it does not exist
     if not os.path.exists(csv_path):
         df = pd.DataFrame(columns=['Model', 
-                                   'Accuracy Training', 'Precision Training', 'Recall Training', 'F1 Training', 
-                                   'Accuracy Validation', 'Precision Validation', 'Recall Validation', 'F1 Validation', 
-                                   'Accuracy Test', 'Precision Test', 'Recall Test', 'F1 Test'])
+                                   'Accuracy Training', 'Precision Training', 'Recall Training', 'F1-Score Training', 
+                                   'Accuracy Validation', 'Precision Validation', 'Recall Validation', 'F1-Score Validation', 
+                                   'Accuracy Test', 'Precision Test', 'Recall Test', 'F1-Score Test'])
         df.to_csv(csv_path, index=False)
 
     df = pd.read_csv(csv_path) #Load the CSV file
@@ -190,9 +190,9 @@ def save_metrics_to_csv(model, X, y, model_name='OurModel', dataset='test', csv_
         df = pd.concat([df, pd.DataFrame({'Model': [model_name]})], ignore_index=True)
 
     #Dictionary that maps each dataset to its corresponding columns
-    columns = {'train': ('Accuracy Training', 'Precision Training', 'Recall Training', 'F1 Training'),
-               'val':   ('Accuracy Validation', 'Precision Validation', 'Recall Validation', 'F1 Validation'),
-               'test':  ('Accuracy Test', 'Precision Test', 'Recall Test', 'F1 Test')}
+    columns = {'train': ('Accuracy Training', 'Precision Training', 'Recall Training', 'F1-Score Training'),
+               'val': ('Accuracy Validation', 'Precision Validation', 'Recall Validation', 'F1-Score Validation'),
+               'test': ('Accuracy Test', 'Precision Test', 'Recall Test', 'F1-Score Test')}
 
     df_accuracy, df_precision, df_recall, df_f1 = columns[dataset] #Select the columns according to the evaluated dataset
 
