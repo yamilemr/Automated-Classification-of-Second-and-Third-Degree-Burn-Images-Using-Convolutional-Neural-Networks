@@ -1,8 +1,14 @@
 
 # Automated Classification of Second- and Third-Degree Burn Images
 
-This repository contains code, trained models, experiment artifacts and notebooks used to develop and evaluate convolutional neural networks for classifying second- and third-degree burn images.
+This repository contains code, trained models, experiment artifacts and notebooks used to develop and evaluate convolutional neural networks for classifying second- and third-degree burn images.  
+A sequential hyperparameter search was conducted for the proposed base model. Once the optimal hyperparameter for the Convolutional Neural Network (CNN) were indetified, all combinations of RGB input channels were tested; the configuration using only the green channel yielded the best evaluation metrics.
 
+![Our arquitecture](/figures/architecture_green_channel.png)
+
+Subsequently, our green-channel-only model was compared against several pre-trained models, outperforming them in the evaluation metrics on the test data.
+
+![Transfer learning metrics](/figures/figure_5.png)
 
 ## Setup
 1. Create a Python `3.11.9` environment (recommended: venv or conda).
@@ -18,11 +24,7 @@ The Gradio demo is in `interface/gradio_burn_classification.py`. To run it local
 ```bash
 python interface/gradio_burn_classification.py
 ```
-
-Notes:
-- The script expects a trained model file at `models/proposed_model/burn_green_cnn.keras` by default — update the path in the script if you want to use a different model from `models/`.
-- The model used by the Gradio app preprocesses images to size 540×960 and uses only the green channel (single-channel input).
-
+Can select our proposed model or the other pre-trained models
 ## Project structure
 
 - `requirements.txt` — pinned Python dependencies used in experiments and the interface.
