@@ -36,7 +36,7 @@ Notes:
 - `notebooks/` — Jupyter notebooks for exploration, evaluation and figure generation. Notable files:
   - `best_model_green_channel.ipynb` — proposed architecture in the manuscript that uses only the green channel.
   - `transfer_learning_training.ipynb` — transfer-learning experiments and setup notes.
-  - `model_test_evaluation.ipynb` — aggregated model evaluation and metric calculations.
+  - `model_test_evaluation.ipynb` — independent test evaluation of proposed and transfer learning models.
   - `hyperparameter_search_wandb.ipynb` — hyperparameter search analysis and W&B integration.
   - `wandb_csv_preprocessing.ipynb` — scripts to preprocess W&B CSV exports.
   - `figure_plots.ipynb` — generation of the figures included in the manuscript.
@@ -61,7 +61,8 @@ pred = model.predict(X)
 ```
 
 ## Notebooks and analysis
-- Use the notebooks in `notebooks/` to reproduce experiments, plots and evaluation metrics. The helper functions in `notebooks/tools.py` include `load_images_with_labels()` and `evaluate_model()` which are used across analysis notebooks.
+- Use the notebooks in `notebooks/` to reproduce experiments, plots and evaluation metrics.
+- The helper functions in `notebooks/tools.py` include `load_images_with_labels()`, `calculate_metrics()`, `evaluate_model()`, and `save_metrics_to_csv()`, which are used in the analysis notebooks.
 
 ## Experiments and tracking
 - Weights & Biases (W&B) was used for experiment tracking; `data/results/wandb_export.csv` contains exported run data used for post-hoc analysis.
