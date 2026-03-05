@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 import gradio as gr
 from keras import models
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as mobilenetv2_preprocess
+from tensorflow.keras.applications.resnet50 import preprocess_input as resnet50_preprocess
+from tensorflow.keras.applications.vgg16 import preprocess_input as vgg16_preprocess
 
 # Dictionary with model names and their respective paths
 MODEL_PATHS = {
@@ -11,8 +14,8 @@ MODEL_PATHS = {
     'VGG16': 'models/vgg16/vgg16.keras' 
 }
 
-# Dictionary with input dimensions (Width, Height) required by each model.
-# Adjust the 224x224 values if you used a different resolution during training.
+# Dictionary with input dimensions (Width, Height) required by each model
+# Adjust the 224x224 values if you used a different resolution during training
 MODEL_DIMS = {
     'Proposed Model': (540, 960),
     'MobileNetV2': (224, 224),
@@ -25,7 +28,6 @@ current_model_name = None
 cnn = None
 
 def predict_burn_degree(img, model_choice):
-    
     '''
     Function that receives an image and the selected model from the Gradio interface, preprocesses it 
     using the same pipeline applied during model training, and returns the
@@ -43,7 +45,7 @@ def predict_burn_degree(img, model_choice):
     
     # Load the model dynamically only if it's different from the one already in memory
     if current_model_name != model_choice:
-        print(f"Cargando el modelo: {model_choice}...")
+        print(f"Loading model: {model_choice}...")
         cnn = models.load_model(MODEL_PATHS[model_choice])
         current_model_name = model_choice
 
@@ -69,10 +71,17 @@ def predict_burn_degree(img, model_choice):
     else:
         # Reshape for Keras: (Height, Width, 3) -> (1, Height, Width, 3)
         X = np.expand_dims(resized, axis=0) 
+        # Normalize the image using the same specific preprocessing function applied during training
+        if model_choice == 'MobileNetV2':
+            X = mobilenetv2_preprocess(X)
+        elif model_choice == 'ResNet50':
+            X = resnet50_preprocess(X)
+        elif model_choice == 'VGG16':
+            X = vgg16_preprocess(X)
 
     # Inference
     pred = cnn.predict(X)
-    prob = pred[0][0] # probability to being a third degree burn (class 1)
+    prob = pred[0][0] # Probability to being a third degree burn (class 1)
     
     # Classification logic
     if prob > 0.5:
@@ -91,7 +100,7 @@ iface = gr.Interface(
         gr.Image(type='numpy', label='Upload an image', height=360),
         gr.Dropdown(
             choices=['Proposed Model', 'MobileNetV2', 'ResNet50', 'VGG16'], 
-            value='Proposed Model', # default value
+            value='Proposed Model', # Default value
             label='Select Model'
         )
     ],
