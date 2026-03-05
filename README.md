@@ -1,6 +1,8 @@
 
 # Automated Classification of Second- and Third-Degree Burn Images
 
+[![DOI](https://zenodo.org/badge/1146389207.svg)](https://doi.org/10.5281/zenodo.18870161)
+
 This repository contains code, trained models, experiment artifacts and notebooks used to develop and evaluate convolutional neural networks for classifying second- and third-degree burn images.  
 A sequential hyperparameter search was conducted for the proposed base model. Once the optimal hyperparameter for the Convolutional Neural Network (CNN) were indetified, all combinations of RGB input channels were tested; the configuration using only the green channel yielded the best evaluation metrics.
 
