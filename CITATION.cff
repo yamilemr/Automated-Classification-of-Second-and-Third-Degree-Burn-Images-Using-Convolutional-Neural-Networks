@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: Automated Classification of Second- and Third-Degree Burn Images Using Convolutional Neural Networks
+version: v1.0.0
+doi: 10.5281/zenodo.18870162
+date-released: 2026-03-05
+authors:
+  - family-names: Montecinos-Rodríguez
+    given-names: Yamile
+    orcid: "https://orcid.org/0009-0002-6348-595X"
+  - family-names: Torres-Santana
+    given-names: Francisco J.
+    orcid: "https://orcid.org/0009-0002-0475-1568"
+  - family-names: Díaz-González
+    given-names: Lorena
+    orcid: "https://orcid.org/0000-0003-1577-5629"
