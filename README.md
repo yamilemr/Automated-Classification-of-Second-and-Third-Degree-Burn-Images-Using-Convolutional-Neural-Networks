@@ -1,12 +1,13 @@
 
 # Automated Classification of Second- and Third-Degree Burn Images
 
-[![DOI](https://zenodo.org/badge/1146389207.svg)](https://doi.org/10.5281/zenodo.18870161)
+[![Software DOI](https://zenodo.org/badge/1146389207.svg)](https://doi.org/10.5281/zenodo.18870161)
+[![Paper DOI](https://img.shields.io/badge/Paper-10.3390/ebj7020033-blue)](https://doi.org/10.3390/ebj7020033)
 
 This repository contains code, trained models, experiment artifacts and notebooks used to develop and evaluate convolutional neural networks for classifying second- and third-degree burn images.  
 A sequential hyperparameter search was conducted for the proposed base model. Once the optimal hyperparameter for the Convolutional Neural Network (CNN) were indetified, all combinations of RGB input channels were tested; the configuration using only the green channel yielded the best evaluation metrics.
 
-![Our arquitecture](/figures/architecture_green_channel.png)
+![Graphical abstract](/figures/graphical_abstract.png)
 
 Subsequently, our green-channel-only model was compared against several pre-trained models, outperforming them in the evaluation metrics on the test data.
 
@@ -27,8 +28,8 @@ The Gradio demo is in `interface/gradio_burn_classification.py`. To run it local
 python interface/gradio_burn_classification.py
 ```
 Can select our proposed model or the other pre-trained models
-## Project structure
 
+## Project structure
 - `requirements.txt` — pinned Python dependencies used in experiments and the interface.
 - `LICENSE` — project license file.
 - `data/`
@@ -71,9 +72,39 @@ pred = model.predict(X)
 ## Experiments and tracking
 - Weights & Biases (W&B) was used for experiment tracking; `data/results/wandb_export.csv` contains exported run data used for post-hoc analysis.
 
-
 ## License
 - See `LICENSE` for license terms.
+
+## Citation
+If you use this work, please cite the article and the software repository.
+
+### Article
+```bibtex
+@article{montecinos2026_paper,
+  author={Montecinos-Rodríguez, Yamile and Torres-Santana, Francisco J. and Lakouari, Noureddine and Díaz-González, Lorena},
+  title={Automated Classification of Second- and Third-Degree Burn Images Using Convolutional Neural Networks},
+  journal={European Burn Journal},
+  volume={7},
+  year={2026},
+  number={2},
+  article-number={33},
+  url={https://www.mdpi.com/2673-1991/7/2/33},
+  issn={2673-1991},
+  doi={10.3390/ebj7020033}
+}
+```
+
+### Software
+```bibtex
+@software{montecinos2026_software,
+  author={Montecinos-Rodríguez, Yamile and Torres-Santana, Francisco J. and Díaz-González, Lorena},
+  title={Automated Classification of Second- and Third-Degree Burn Images Using Convolutional Neural Networks},
+  year={2026},
+  publisher={Zenodo},
+  doi={10.5281/zenodo.18870161},
+  url={https://doi.org/10.5281/zenodo.18870161},
+}
+```
 
 ## Contact
 - Yamile Montecinos Rodríguez - [LinkedIn](https://www.linkedin.com/in/yamilemontecinos/)
